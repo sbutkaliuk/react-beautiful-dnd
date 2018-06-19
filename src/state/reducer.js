@@ -1,5 +1,6 @@
 // @flow
 import memoizeOne from 'memoize-one';
+import { type Position } from 'css-box-model';
 import type {
   Action,
   State,
@@ -424,6 +425,10 @@ export default (state: State = clean('IDLE'), action: Action): State => {
     const { id, isEnabled } = action.payload;
     const target = state.dimension.droppable[id];
 
+    // This can happen if the enabled state changes on the droppable between
+    // a onDragStart and the initial publishing of the Droppable.
+    // The isEnabled state will be correctly populated when the Droppable dimension
+    // is published. Therefore we do not need to log any error here
     if (!target) {
       console.warn('cannot update enabled state for droppable as it has not yet been collected');
       return state;
@@ -526,26 +531,50 @@ export default (state: State = clean('IDLE'), action: Action): State => {
       return clean();
     }
 
-    const existing: DragState = state.drag;
+    const drag: DragState = state.drag;
     const isMovingForward: boolean = action.type === 'MOVE_FORWARD';
 
-    if (!existing.impact.destination) {
+    if (!drag.impact.destination) {
       console.error('cannot move if there is no previous destination');
       return clean();
     }
 
+    const droppableId: DroppableId = drag.impact.destination.droppableId;
     const droppable: DroppableDimension = state.dimension.droppable[
-      existing.impact.destination.droppableId
+      droppableId
     ];
 
-    const result: ?MoveToNextResult = moveToNextIndex({
+    const current: CurrentDrag = drag.current;
+    const descriptor: DraggableDescriptor = drag.initial.descriptor;
+    const draggableId: DraggableId = descriptor.id;
+    const previousPageBorderBoxCenter: Position = current.page.center;
+    const home: DraggableLocation = {
+      index: descriptor.index,
+      droppableId: descriptor.droppableId,
+    };
+
+    const params = {
       isMovingForward,
-      draggableId: existing.initial.descriptor.id,
-      droppable,
+      draggableId,
       draggables: state.dimension.draggable,
-      previousPageCenter: existing.current.page.center,
-      previousImpact: existing.impact,
-      viewport: existing.current.viewport,
+      previousImpact: drag.impact,
+      viewport: current.viewport,
+    };
+
+    // First tries to move through the list.
+    // If failed (because at the beginning or end of a list)
+    // Make attempt to move across opposite axis (vertical if lists are placed horizontally)
+    const result: ?MoveToNextResult = moveToNextIndex({
+      droppable,
+      previousPageBorderBoxCenter,
+      ...params,
+    }) || moveCrossAxis({
+      pageCenter: previousPageBorderBoxCenter,
+      droppableId,
+      home,
+      droppables: state.dimension.droppable,
+      oppositeAxis: true,
+      ...params,
     });
 
     // cannot move anyway (at the beginning or end of a list)
@@ -554,13 +583,14 @@ export default (state: State = clean('IDLE'), action: Action): State => {
     }
 
     const impact: DragImpact = result.impact;
-    const page: Position = result.pageCenter;
-    const client: Position = subtract(page, existing.current.viewport.scroll);
+    const clientBorderBoxCenter: Position = subtract(
+      result.pageCenter, drag.current.viewport.scroll
+    );
 
     return move({
       state,
       impact,
-      clientSelection: client,
+      clientSelection: clientBorderBoxCenter,
       shouldAnimate: true,
       scrollJumpRequest: result.scrollJumpRequest,
     });
