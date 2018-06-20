@@ -21,7 +21,6 @@ import type {
   Phase,
   DraggableLocation,
   CurrentDragPositions,
-  Position,
   InitialDragPositions,
   LiftRequest,
   Viewport,
@@ -568,14 +567,17 @@ export default (state: State = clean('IDLE'), action: Action): State => {
       droppable,
       previousPageBorderBoxCenter,
       ...params,
-    }) || moveCrossAxis({
-      pageCenter: previousPageBorderBoxCenter,
-      droppableId,
-      home,
-      droppables: state.dimension.droppable,
-      oppositeAxis: true,
-      ...params,
-    });
+    }) || {
+      scrollJumpRequest: null,
+      ...moveCrossAxis({
+        pageCenter: previousPageBorderBoxCenter,
+        droppableId,
+        home,
+        droppables: state.dimension.droppable,
+        oppositeAxis: true,
+        ...params,
+      }),
+    };
 
     // cannot move anyway (at the beginning or end of a list)
     if (!result) {
