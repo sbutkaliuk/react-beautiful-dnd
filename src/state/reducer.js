@@ -1,6 +1,5 @@
 // @flow
 import memoizeOne from 'memoize-one';
-import { type Position } from 'css-box-model';
 import type {
   Action,
   State,
@@ -19,6 +18,7 @@ import type {
   InitialDrag,
   PendingDrop,
   Phase,
+  Position,
   DraggableLocation,
   CurrentDragPositions,
   InitialDragPositions,
@@ -546,7 +546,7 @@ export default (state: State = clean('IDLE'), action: Action): State => {
     const current: CurrentDrag = drag.current;
     const descriptor: DraggableDescriptor = drag.initial.descriptor;
     const draggableId: DraggableId = descriptor.id;
-    const previousPageBorderBoxCenter: Position = current.page.center;
+    const previousPageCenter: Position = current.page.center;
     const home: DraggableLocation = {
       index: descriptor.index,
       droppableId: descriptor.droppableId,
@@ -565,12 +565,12 @@ export default (state: State = clean('IDLE'), action: Action): State => {
     // Make attempt to move across opposite axis (vertical if lists are placed horizontally)
     const result: ?MoveToNextResult = moveToNextIndex({
       droppable,
-      previousPageBorderBoxCenter,
+      previousPageCenter,
       ...params,
     }) || {
       scrollJumpRequest: null,
       ...moveCrossAxis({
-        pageCenter: previousPageBorderBoxCenter,
+        pageCenter: previousPageCenter,
         droppableId,
         home,
         droppables: state.dimension.droppable,
