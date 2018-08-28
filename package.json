@@ -1,6 +1,6 @@
 {
-  "name": "react-beautiful-dnd",
-  "version": "6.0.2",
+  "name": "mhe-react-beautiful-dnd",
+  "version": "6.0.2-beta2",
   "description": "Beautiful, accessible drag and drop for lists with React.js",
   "author": "Alex Reardon <areardon@atlassian.com>",
   "keywords": [
@@ -13,7 +13,7 @@
     "beautiful"
   ],
   "bugs": {
-    "url": "https://github.com/atlassian/react-beautiful-dnd/issues"
+    "url": "https://github.com/mhelabs/react-beautiful-dnd/issues"
   },
   "main": "lib/index.js",
   "module": "esm/index.js",
@@ -99,6 +99,6 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/atlassian/react-beautiful-dnd.git"
+    "url": "https://github.com/mhelabs/react-beautiful-dnd.git"
   }
 }
