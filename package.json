@@ -1,6 +1,6 @@
 {
-  "name": "react-beautiful-dnd",
-  "version": "6.0.2",
+  "name": "mhe-react-beautiful-dnd",
+  "version": "6.0.2-beta2",
   "description": "Beautiful, accessible drag and drop for lists with React.js",
   "author": "Alex Reardon <areardon@atlassian.com>",
   "keywords": [
@@ -13,7 +13,7 @@
     "beautiful"
   ],
   "bugs": {
-    "url": "https://github.com/atlassian/react-beautiful-dnd/issues"
+    "url": "https://github.com/mhelabs/react-beautiful-dnd/issues"
   },
   "main": "lib/index.js",
   "module": "esm/index.js",
@@ -71,12 +71,12 @@
     "enzyme-adapter-react-15": "^1.0.5",
     "eslint": "^4.15.0",
     "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-flowtype": "^2.41.0",
+    "eslint-plugin-flowtype": "^2.46.3",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jest": "^21.6.1",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.5.1",
-    "flow-bin": "0.69.0",
+    "flow-bin": "0.71.0",
     "jest": "^22.0.5",
     "puppeteer": "^1.2.0",
     "raf-stub": "^2.0.2",
@@ -99,6 +99,6 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/atlassian/react-beautiful-dnd.git"
+    "url": "https://github.com/mhelabs/react-beautiful-dnd.git"
   }
 }
